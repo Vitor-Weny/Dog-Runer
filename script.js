@@ -18,15 +18,17 @@ function jump() {
   }, 500);
 }
 
-document.addEventListener("keydown", e => {
-  if (e.code === "Space") jump();
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") {
+    jump();
+  }
 });
-document.addEventListener("touchstart", e => {
+document.addEventListener("touchstart", (e) => {
   e.preventDefault();
   jump();
 }, { passive: false });
 
-// Aumenta velocidade a cada clique e atualiza texto do botão
+// Aumenta a velocidade ao clicar no botão
 speedBtn.addEventListener("click", () => {
   speed += 2;
   speedBtn.textContent = `Velocidade: ${speed}`;
@@ -58,7 +60,7 @@ function createObstacle() {
       return;
     }
 
-    position -= speed; // usa a variável speed atual
+    position -= speed;
     obstacle.style.left = position + "px";
 
     const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
