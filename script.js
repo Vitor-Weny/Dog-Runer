@@ -22,6 +22,20 @@ document.addEventListener("touchstart", () => {
   jump();
 });
 
+function getRelativeRect(element) {
+  const gameRect = game.getBoundingClientRect();
+  const elemRect = element.getBoundingClientRect();
+
+  return {
+    left: elemRect.left - gameRect.left,
+    right: elemRect.right - gameRect.left,
+    top: elemRect.top - gameRect.top,
+    bottom: elemRect.bottom - gameRect.top,
+    width: elemRect.width,
+    height: elemRect.height
+  };
+}
+
 function createObstacle() {
   if (gameOver) return;
 
@@ -42,10 +56,11 @@ function createObstacle() {
     position -= 5;
     obstacle.style.left = position + "px";
 
-    const dogRect = dog.getBoundingClientRect();
-    const obstacleRect = obstacle.getBoundingClientRect();
+    // Pega posições relativas dentro do container #game
+    const dogRect = getRelativeRect(dog);
+    const obstacleRect = getRelativeRect(obstacle);
 
-    // Hitbox bem pequena: só 2px margem dentro do cacto
+    // Hitbox reduzida para o cacto (2px margem)
     const obstacleHitbox = {
       left: obstacleRect.left + 2,
       right: obstacleRect.right - 2,
@@ -53,6 +68,7 @@ function createObstacle() {
       bottom: obstacleRect.bottom - 2,
     };
 
+    // Colisão verdadeira somente se retângulos se sobrepõem
     const collided = !(
       dogRect.right < obstacleHitbox.left ||
       dogRect.left > obstacleHitbox.right ||
