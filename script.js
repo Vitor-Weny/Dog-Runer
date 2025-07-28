@@ -47,11 +47,22 @@ function createObstacle() {
     const dogRect = dog.getBoundingClientRect();
     const obstacleRect = obstacle.getBoundingClientRect();
 
-    if (
-      dogRect.right > obstacleRect.left &&
-      dogRect.left < obstacleRect.right &&
-      dogRect.bottom > obstacleRect.top
-    ) {
+    // Reduzindo hitbox do obstáculo (cacto)
+    const obstacleHitbox = {
+      left: obstacleRect.left + 8,
+      right: obstacleRect.right - 8,
+      top: obstacleRect.top + 8,
+      bottom: obstacleRect.bottom - 8,
+    };
+
+    const collided = !(
+      dogRect.right < obstacleHitbox.left ||
+      dogRect.left > obstacleHitbox.right ||
+      dogRect.bottom < obstacleHitbox.top ||
+      dogRect.top > obstacleHitbox.bottom
+    );
+
+    if (collided) {
       clearInterval(moveInterval);
       gameOver = true;
       alert("💥 Você perdeu! Pontuação: " + score);
