@@ -5,10 +5,19 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
-const dogWidth = 44;      // largura do emoji cachorro (igual ao CSS)
-const dogHeight = 44;     // altura do emoji cachorro
-const obstacleWidth = 32; // largura aproximada do emoji cacto
-const obstacleHeight = 44;
+// Tamanhos para colisão (ajustados para responsividade)
+function getSizes() {
+  const gameWidth = game.clientWidth;
+  const gameHeight = game.clientHeight;
+
+  // Ajusta tamanho do dog e obstáculo conforme o game
+  const dogWidth = gameWidth > 600 ? 44 : 36;
+  const dogHeight = gameWidth > 600 ? 44 : 36;
+  const obstacleWidth = gameWidth > 600 ? 32 : 36;
+  const obstacleHeight = gameWidth > 600 ? 44 : 36;
+
+  return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
+}
 
 function jump() {
   if (!dog.classList.contains("jump")) {
@@ -19,10 +28,11 @@ function jump() {
   }
 }
 
-document.addEventListener("keydown", (event) => {
-  if (event.code === "Space") jump();
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") {
+    jump();
+  }
 });
-
 document.addEventListener("touchstart", () => {
   jump();
 });
@@ -34,7 +44,7 @@ function createObstacle() {
   obstacle.classList.add("obstacle");
   obstacle.textContent = "🌵";
 
-  let position = 600;
+  let position = game.clientWidth; // Começa fora da tela à direita
   obstacle.style.left = position + "px";
   game.appendChild(obstacle);
 
@@ -47,13 +57,14 @@ function createObstacle() {
     position -= 5;
     obstacle.style.left = position + "px";
 
-    // Pegando posições dentro do container (valores CSS)
+    const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
+
     const dogLeft = parseInt(window.getComputedStyle(dog).getPropertyValue("left"));
     const dogBottom = parseInt(window.getComputedStyle(dog).getPropertyValue("bottom"));
     const obstacleLeft = position;
-    const obstacleBottom = 10; // fixo no chão
+    const obstacleBottom = 10; // chão fixo
 
-    // Hitbox do cachorro (exata)
+    // Hitboxes exatas para colisão
     const dogHitbox = {
       left: dogLeft,
       right: dogLeft + dogWidth,
@@ -61,7 +72,6 @@ function createObstacle() {
       top: dogBottom + dogHeight,
     };
 
-    // Hitbox do cacto (exata)
     const obstacleHitbox = {
       left: obstacleLeft,
       right: obstacleLeft + obstacleWidth,
@@ -69,7 +79,7 @@ function createObstacle() {
       top: obstacleBottom + obstacleHeight,
     };
 
-    // Verificação de colisão AABB (exata)
+    // Colisão AABB
     const collided = !(
       dogHitbox.right < obstacleHitbox.left ||
       dogHitbox.left > obstacleHitbox.right ||
@@ -80,11 +90,11 @@ function createObstacle() {
     if (collided) {
       clearInterval(moveInterval);
       gameOver = true;
-      alert("💥 Você perdeu! Pontuação: " + score);
+      alert(`💥 Você perdeu! Pontuação: ${score}`);
       location.reload();
     }
 
-    if (position < -50) {
+    if (position < -obstacleWidth) {
       clearInterval(moveInterval);
       obstacle.remove();
     }
