@@ -5,7 +5,6 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
-// Função pulo
 function jump() {
   if (!dog.classList.contains("jump")) {
     dog.classList.add("jump");
@@ -23,7 +22,6 @@ document.addEventListener("touchstart", () => {
   jump();
 });
 
-// Criar obstáculos (cactos 🌵)
 function createObstacle() {
   if (gameOver) return;
 
@@ -47,12 +45,12 @@ function createObstacle() {
     const dogRect = dog.getBoundingClientRect();
     const obstacleRect = obstacle.getBoundingClientRect();
 
-    // Reduzindo hitbox do obstáculo (cacto)
+    // Hitbox bem pequena: só 2px margem dentro do cacto
     const obstacleHitbox = {
-      left: obstacleRect.left + 8,
-      right: obstacleRect.right - 8,
-      top: obstacleRect.top + 8,
-      bottom: obstacleRect.bottom - 8,
+      left: obstacleRect.left + 2,
+      right: obstacleRect.right - 2,
+      top: obstacleRect.top + 2,
+      bottom: obstacleRect.bottom - 2,
     };
 
     const collided = !(
@@ -78,7 +76,6 @@ function createObstacle() {
   setTimeout(createObstacle, Math.random() * 1000 + 1000);
 }
 
-// Pontuação
 setInterval(() => {
   if (!gameOver) {
     score++;
@@ -86,5 +83,4 @@ setInterval(() => {
   }
 }, 100);
 
-// Começa o jogo
 createObstacle();
