@@ -1,37 +1,44 @@
 const dog = document.getElementById("dog");
 const game = document.getElementById("game");
 const scoreDisplay = document.getElementById("score");
+const speedBtn = document.getElementById("speedBtn");
 
 let score = 0;
 let gameOver = false;
+let jumping = false;
+let speed = 8; // velocidade inicial
+
+function jump() {
+  if (jumping) return;
+  jumping = true;
+  dog.classList.add("jump");
+  setTimeout(() => {
+    dog.classList.remove("jump");
+    jumping = false;
+  }, 500);
+}
+
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") jump();
+});
+document.addEventListener("touchstart", e => {
+  e.preventDefault();
+  jump();
+}, { passive: false });
+
+speedBtn.addEventListener("click", () => {
+  speed += 2;
+  speedBtn.textContent = `Velocidade: ${speed}`;
+});
 
 function getSizes() {
   const gameWidth = game.clientWidth;
-  // Ajusta tamanho conforme largura da tela
   const dogWidth = gameWidth > 600 ? 44 : 36;
   const dogHeight = gameWidth > 600 ? 44 : 36;
   const obstacleWidth = gameWidth > 600 ? 32 : 36;
   const obstacleHeight = gameWidth > 600 ? 44 : 36;
   return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
 }
-
-function jump() {
-  if (!dog.classList.contains("jump")) {
-    dog.classList.add("jump");
-    setTimeout(() => {
-      dog.classList.remove("jump");
-    }, 500);
-  }
-}
-
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-    jump();
-  }
-});
-document.addEventListener("touchstart", () => {
-  jump();
-});
 
 function createObstacle() {
   if (gameOver) return;
@@ -50,7 +57,7 @@ function createObstacle() {
       return;
     }
 
-    position -= 8; // Velocidade aumentada
+    position -= speed;
     obstacle.style.left = position + "px";
 
     const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
@@ -60,18 +67,21 @@ function createObstacle() {
     const obstacleLeft = position;
     const obstacleBottom = 10;
 
+    // Ajuste hitbox: diminuir tamanho da colisão para encostar só de verdade
+    const hitboxPadding = 5;
+
     const dogHitbox = {
-      left: dogLeft,
-      right: dogLeft + dogWidth,
-      bottom: dogBottom,
-      top: dogBottom + dogHeight,
+      left: dogLeft + hitboxPadding,
+      right: dogLeft + dogWidth - hitboxPadding,
+      bottom: dogBottom + hitboxPadding,
+      top: dogBottom + dogHeight - hitboxPadding,
     };
 
     const obstacleHitbox = {
-      left: obstacleLeft,
-      right: obstacleLeft + obstacleWidth,
-      bottom: obstacleBottom,
-      top: obstacleBottom + obstacleHeight,
+      left: obstacleLeft + hitboxPadding,
+      right: obstacleLeft + obstacleWidth - hitboxPadding,
+      bottom: obstacleBottom + hitboxPadding,
+      top: obstacleBottom + obstacleHeight - hitboxPadding,
     };
 
     const collided = !(
