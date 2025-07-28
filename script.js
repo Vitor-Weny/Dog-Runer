@@ -67,18 +67,21 @@ function createObstacle() {
     const obstacleLeft = position;
     const obstacleBottom = 10;
 
+    // Ajuste hitbox: diminuir tamanho da colisão para encostar só de verdade
+    const hitboxPadding = 5;
+
     const dogHitbox = {
-      left: dogLeft,
-      right: dogLeft + dogWidth,
-      bottom: dogBottom,
-      top: dogBottom + dogHeight,
+      left: dogLeft + hitboxPadding,
+      right: dogLeft + dogWidth - hitboxPadding,
+      bottom: dogBottom + hitboxPadding,
+      top: dogBottom + dogHeight - hitboxPadding,
     };
 
     const obstacleHitbox = {
-      left: obstacleLeft,
-      right: obstacleLeft + obstacleWidth,
-      bottom: obstacleBottom,
-      top: obstacleBottom + obstacleHeight,
+      left: obstacleLeft + hitboxPadding,
+      right: obstacleLeft + obstacleWidth - hitboxPadding,
+      bottom: obstacleBottom + hitboxPadding,
+      top: obstacleBottom + obstacleHeight - hitboxPadding,
     };
 
     const collided = !(
