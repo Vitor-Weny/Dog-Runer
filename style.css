@@ -1,7 +1,6 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
-  color: #333;
   text-align: center;
 }
 
@@ -25,37 +24,27 @@ body {
   background-color: #888;
 }
 
-/* Dog (personagem) */
+/* Dog (jogador) */
 #dog {
   width: 44px;
   height: 44px;
   background-color: brown;
   border-radius: 4px;
   position: absolute;
-  bottom: 10px; /* em cima do chão */
+  bottom: 10px;
   left: 50px;
+  text-align: center;
+  font-size: 30px;
+  line-height: 44px;
+  color: white;
 }
 
-/* Cacto (obstáculo) */
-#cactus {
-  width: 20px;
-  height: 50px;
-  background-color: #4caf50;
+/* Obstáculo emoji 🐕 */
+.obstacle {
   position: absolute;
-  bottom: 10px; /* sobre o chão */
-  right: -20px;
-  animation: cactusMove 2s linear infinite;
-  clip-path: polygon(50% 0%, 60% 20%, 55% 40%, 60% 60%, 55% 80%, 60% 100%, 40% 100%, 45% 80%, 40% 60%, 45% 40%, 40% 20%);
-}
-
-/* Animação do cacto */
-@keyframes cactusMove {
-  0% {
-    right: -20px;
-  }
-  100% {
-    right: 100%;
-  }
+  bottom: 10px;
+  font-size: 30px;
+  animation: moveObstacle 3s linear infinite;
 }
 
 /* Pulo */
