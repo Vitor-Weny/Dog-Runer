@@ -1,27 +1,21 @@
 const dog = document.getElementById("dog");
 const game = document.getElementById("game");
 const scoreDisplay = document.getElementById("score");
+const speedBtn = document.getElementById("speedBtn");
 
 let score = 0;
 let gameOver = false;
-
-function getSizes() {
-  const gameWidth = game.clientWidth;
-  // Ajusta tamanho conforme largura da tela
-  const dogWidth = gameWidth > 600 ? 44 : 36;
-  const dogHeight = gameWidth > 600 ? 44 : 36;
-  const obstacleWidth = gameWidth > 600 ? 32 : 36;
-  const obstacleHeight = gameWidth > 600 ? 44 : 36;
-  return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
-}
+let jumping = false;
+let speed = 8; // velocidade inicial
 
 function jump() {
-  if (!dog.classList.contains("jump")) {
-    dog.classList.add("jump");
-    setTimeout(() => {
-      dog.classList.remove("jump");
-    }, 500);
-  }
+  if (jumping) return;
+  jumping = true;
+  dog.classList.add("jump");
+  setTimeout(() => {
+    dog.classList.remove("jump");
+    jumping = false;
+  }, 500);
 }
 
 document.addEventListener("keydown", (e) => {
@@ -29,9 +23,25 @@ document.addEventListener("keydown", (e) => {
     jump();
   }
 });
-document.addEventListener("touchstart", () => {
+document.addEventListener("touchstart", (e) => {
+  e.preventDefault();
   jump();
+}, { passive: false });
+
+// Aumenta a velocidade ao clicar no botão
+speedBtn.addEventListener("click", () => {
+  speed += 2;
+  speedBtn.textContent = `Velocidade: ${speed}`;
 });
+
+function getSizes() {
+  const gameWidth = game.clientWidth;
+  const dogWidth = gameWidth > 600 ? 44 : 36;
+  const dogHeight = gameWidth > 600 ? 44 : 36;
+  const obstacleWidth = gameWidth > 600 ? 32 : 36;
+  const obstacleHeight = gameWidth > 600 ? 44 : 36;
+  return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
+}
 
 function createObstacle() {
   if (gameOver) return;
@@ -50,7 +60,7 @@ function createObstacle() {
       return;
     }
 
-    position -= 8; // Velocidade aumentada
+    position -= speed;
     obstacle.style.left = position + "px";
 
     const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
