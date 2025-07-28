@@ -9,7 +9,7 @@ body {
   background-color: #f0f0f0;
   text-align: center;
   padding: 20px;
-  -webkit-tap-highlight-color: transparent; /* Remove highlight no toque mobile */
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
@@ -21,14 +21,13 @@ body {
   background-color: #fff;
   border: 2px solid #888;
   overflow: hidden;
-  touch-action: manipulation; /* para melhorar toque */
+  touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
 
-/* Chão */
 #ground {
   position: absolute;
   bottom: 0;
@@ -37,7 +36,6 @@ body {
   background-color: #888;
 }
 
-/* Cachorro */
 #dog {
   position: absolute;
   bottom: 10px;
@@ -51,7 +49,6 @@ body {
   user-select: none;
 }
 
-/* Obstáculo - cacto */
 .obstacle {
   position: absolute;
   bottom: 10px;
@@ -63,26 +60,33 @@ body {
   user-select: none;
 }
 
+.jump {
+  animation: jump 0.5s ease-out;
+}
+
 @keyframes jump {
   0% { bottom: 10px; }
-  50% { bottom: 130px; }  /* pulo mais alto */
+  50% { bottom: 130px; } /* Pulo mais alto */
   100% { bottom: 10px; }
 }
 
-/* No media query (mobile), ajusta também: */
-
 @media (max-width: 650px) {
-  @keyframes jump {
-    0% { bottom: 8px; }
-    50% { bottom: 100px; }  /* pulo mais alto no mobile */
-    100% { bottom: 8px; }
+  #game {
+    width: 100%;
+    max-width: 600px;
+    height: 150px;
   }
-}
 
+  #dog, .obstacle {
+    width: 36px;
+    height: 36px;
+    font-size: 28px;
+    line-height: 36px;
+  }
 
   @keyframes jump {
     0% { bottom: 8px; }
-    50% { bottom: 70px; }
+    50% { bottom: 100px; } /* Pulo mais alto no mobile */
     100% { bottom: 8px; }
   }
 }
