@@ -5,17 +5,13 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
-// Tamanhos para colisão (ajustados para responsividade)
 function getSizes() {
   const gameWidth = game.clientWidth;
-  const gameHeight = game.clientHeight;
-
-  // Ajusta tamanho do dog e obstáculo conforme o game
+  // Ajusta tamanho conforme largura da tela
   const dogWidth = gameWidth > 600 ? 44 : 36;
   const dogHeight = gameWidth > 600 ? 44 : 36;
   const obstacleWidth = gameWidth > 600 ? 32 : 36;
   const obstacleHeight = gameWidth > 600 ? 44 : 36;
-
   return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
 }
 
@@ -44,7 +40,7 @@ function createObstacle() {
   obstacle.classList.add("obstacle");
   obstacle.textContent = "🌵";
 
-  let position = game.clientWidth; // Começa fora da tela à direita
+  let position = game.clientWidth;
   obstacle.style.left = position + "px";
   game.appendChild(obstacle);
 
@@ -54,9 +50,7 @@ function createObstacle() {
       return;
     }
 
-   position -= 8;  // Obstáculos mais rápidos
-
-
+    position -= 8; // Velocidade aumentada
     obstacle.style.left = position + "px";
 
     const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
@@ -64,9 +58,8 @@ function createObstacle() {
     const dogLeft = parseInt(window.getComputedStyle(dog).getPropertyValue("left"));
     const dogBottom = parseInt(window.getComputedStyle(dog).getPropertyValue("bottom"));
     const obstacleLeft = position;
-    const obstacleBottom = 10; // chão fixo
+    const obstacleBottom = 10;
 
-    // Hitboxes exatas para colisão
     const dogHitbox = {
       left: dogLeft,
       right: dogLeft + dogWidth,
@@ -81,7 +74,6 @@ function createObstacle() {
       top: obstacleBottom + obstacleHeight,
     };
 
-    // Colisão AABB
     const collided = !(
       dogHitbox.right < obstacleHitbox.left ||
       dogHitbox.left > obstacleHitbox.right ||
