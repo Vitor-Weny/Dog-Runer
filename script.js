@@ -5,17 +5,25 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
-// Pulo com barra de espaço
-document.addEventListener("keydown", function(event) {
-  if (event.code === "Space" && !dog.classList.contains("jump")) {
+// Função pulo
+function jump() {
+  if (!dog.classList.contains("jump")) {
     dog.classList.add("jump");
     setTimeout(() => {
       dog.classList.remove("jump");
     }, 500);
   }
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space") jump();
 });
 
-// Criar obstáculos cactos 🌵 dinamicamente
+document.addEventListener("touchstart", () => {
+  jump();
+});
+
+// Criar obstáculos (cactos 🌵)
 function createObstacle() {
   if (gameOver) return;
 
@@ -36,7 +44,6 @@ function createObstacle() {
     position -= 5;
     obstacle.style.left = position + "px";
 
-    // Detectar colisão com precisão real na tela
     const dogRect = dog.getBoundingClientRect();
     const obstacleRect = obstacle.getBoundingClientRect();
 
@@ -51,18 +58,16 @@ function createObstacle() {
       location.reload();
     }
 
-    // Remove obstáculo quando sair da tela
     if (position < -50) {
       clearInterval(moveInterval);
       obstacle.remove();
     }
   }, 20);
 
-  // Próximo obstáculo entre 1s e 2s aleatoriamente
   setTimeout(createObstacle, Math.random() * 1000 + 1000);
 }
 
-// Atualiza pontuação
+// Pontuação
 setInterval(() => {
   if (!gameOver) {
     score++;
@@ -70,5 +75,5 @@ setInterval(() => {
   }
 }, 100);
 
-// Começa o jogo criando o primeiro obstáculo
+// Começa o jogo
 createObstacle();
