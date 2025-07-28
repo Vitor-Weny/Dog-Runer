@@ -1,4 +1,3 @@
-
 const dog = document.getElementById("dog");
 const game = document.getElementById("game");
 const scoreDisplay = document.getElementById("score");
@@ -6,8 +5,8 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
-// Pulo com espaço
-document.addEventListener("keydown", function (event) {
+// Pulo com barra de espaço
+document.addEventListener("keydown", function(event) {
   if (event.code === "Space" && !dog.classList.contains("jump")) {
     dog.classList.add("jump");
     setTimeout(() => {
@@ -16,13 +15,13 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
-// Criar obstáculo
+// Criar obstáculos cactos 🌵 dinamicamente
 function createObstacle() {
   if (gameOver) return;
 
   const obstacle = document.createElement("div");
   obstacle.classList.add("obstacle");
-  obstacle.textContent = "🐕";
+  obstacle.textContent = "🌵";
 
   let position = 600;
   obstacle.style.left = position + "px";
@@ -37,27 +36,33 @@ function createObstacle() {
     position -= 5;
     obstacle.style.left = position + "px";
 
-    // Colisão
-    const dogTop = parseInt(window.getComputedStyle(dog).getPropertyValue("bottom"));
-    if (position > 50 && position < 94 && dogTop < 44) {
+    // Detectar colisão com precisão real na tela
+    const dogRect = dog.getBoundingClientRect();
+    const obstacleRect = obstacle.getBoundingClientRect();
+
+    if (
+      dogRect.right > obstacleRect.left &&
+      dogRect.left < obstacleRect.right &&
+      dogRect.bottom > obstacleRect.top
+    ) {
       clearInterval(moveInterval);
       gameOver = true;
       alert("💥 Você perdeu! Pontuação: " + score);
       location.reload();
     }
 
-    // Saiu da tela
+    // Remove obstáculo quando sair da tela
     if (position < -50) {
       clearInterval(moveInterval);
       obstacle.remove();
     }
   }, 20);
 
-  // Próximo obstáculo entre 1s e 2s
+  // Próximo obstáculo entre 1s e 2s aleatoriamente
   setTimeout(createObstacle, Math.random() * 1000 + 1000);
 }
 
-// Pontuação
+// Atualiza pontuação
 setInterval(() => {
   if (!gameOver) {
     score++;
@@ -65,5 +70,5 @@ setInterval(() => {
   }
 }, 100);
 
-// Iniciar
+// Começa o jogo criando o primeiro obstáculo
 createObstacle();
