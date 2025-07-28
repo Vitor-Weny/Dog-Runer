@@ -54,7 +54,9 @@ function createObstacle() {
       return;
     }
 
-    position -= 5;
+   position -= 8;  // Obstáculos mais rápidos
+
+
     obstacle.style.left = position + "px";
 
     const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
