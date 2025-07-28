@@ -1,56 +1,74 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+const dog = document.getElementById("dog");
+const game = document.getElementById("game");
+const scoreDisplay = document.getElementById("score");
+
+let score = 0;
+let gameOver = false;
+
+// Pulo com barra de espaço
+document.addEventListener("keydown", function(event) {
+  if (event.code === "Space" && !dog.classList.contains("jump")) {
+    dog.classList.add("jump");
+    setTimeout(() => {
+      dog.classList.remove("jump");
+    }, 500);
+  }
+});
+
+// Criar obstáculos cactos 🌵 dinamicamente
+function createObstacle() {
+  if (gameOver) return;
+
+  const obstacle = document.createElement("div");
+  obstacle.classList.add("obstacle");
+  obstacle.textContent = "🌵";
+
+  let position = 600;
+  obstacle.style.left = position + "px";
+  game.appendChild(obstacle);
+
+  const moveInterval = setInterval(() => {
+    if (gameOver) {
+      clearInterval(moveInterval);
+      return;
+    }
+
+    position -= 5;
+    obstacle.style.left = position + "px";
+
+    // Detectar colisão com precisão real na tela
+    const dogRect = dog.getBoundingClientRect();
+    const obstacleRect = obstacle.getBoundingClientRect();
+
+    if (
+      dogRect.right > obstacleRect.left &&
+      dogRect.left < obstacleRect.right &&
+      dogRect.bottom > obstacleRect.top
+    ) {
+      clearInterval(moveInterval);
+      gameOver = true;
+      alert("💥 Você perdeu! Pontuação: " + score);
+      location.reload();
+    }
+
+    // Remove obstáculo quando sair da tela
+    if (position < -50) {
+      clearInterval(moveInterval);
+      obstacle.remove();
+    }
+  }, 20);
+
+  // Próximo obstáculo entre 1s e 2s aleatoriamente
+  setTimeout(createObstacle, Math.random() * 1000 + 1000);
 }
 
-#game {
-  position: relative;
-  margin: 30px auto;
-  width: 600px;
-  height: 200px;
-  background-color: #ffffff;
-  border: 2px solid #888;
-  overflow: hidden;
-}
+// Atualiza pontuação
+setInterval(() => {
+  if (!gameOver) {
+    score++;
+    scoreDisplay.textContent = score;
+  }
+}, 100);
 
-/* Chão */
-#ground {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 10px;
-  background-color: #888;
-}
-
-/* Dog */
-#dog {
-  width: 44px;
-  height: 44px;
-  position: absolute;
-  bottom: 10px;
-  left: 50px;
-  font-size: 32px;
-  line-height: 44px;
-  text-align: center;
-}
-
-/* Obstáculo - cacto */
-.obstacle {
-  position: absolute;
-  bottom: 10px;
-  font-size: 32px;
-}
-
-/* Pulo */
-.jump {
-  animation: jump 0.5s ease-out;
-}
-
-@keyframes jump {
-  0% { bottom: 10px; }
-  50% { bottom: 90px; }
-  100% { bottom: 10px; }
-}
+// Começa o jogo criando o primeiro obstáculo
+createObstacle();
