@@ -28,15 +28,12 @@ body {
 #dog {
   width: 44px;
   height: 44px;
-  background-color: brown;
-  border-radius: 4px;
   position: absolute;
   bottom: 10px;
   left: 50px;
   text-align: center;
   font-size: 30px;
   line-height: 44px;
-  color: white;
 }
 
 /* Obstáculo emoji 🐕 */
@@ -44,12 +41,11 @@ body {
   position: absolute;
   bottom: 10px;
   font-size: 30px;
-  animation: moveObstacle 3s linear infinite;
 }
 
 /* Pulo */
 .jump {
-  animation: jump 0.5s;
+  animation: jump 0.5s ease-out;
 }
 
 @keyframes jump {
