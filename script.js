@@ -5,6 +5,11 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
+const dogWidth = 44;
+const dogHeight = 44;
+const obstacleWidth = 32; // tamanho aproximado do emoji 🌵 no jogo
+const obstacleHeight = 44;
+
 function jump() {
   if (!dog.classList.contains("jump")) {
     dog.classList.add("jump");
@@ -21,20 +26,6 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("touchstart", () => {
   jump();
 });
-
-function getRelativeRect(element) {
-  const gameRect = game.getBoundingClientRect();
-  const elemRect = element.getBoundingClientRect();
-
-  return {
-    left: elemRect.left - gameRect.left,
-    right: elemRect.right - gameRect.left,
-    top: elemRect.top - gameRect.top,
-    bottom: elemRect.bottom - gameRect.top,
-    width: elemRect.width,
-    height: elemRect.height
-  };
-}
 
 function createObstacle() {
   if (gameOver) return;
@@ -56,24 +47,30 @@ function createObstacle() {
     position -= 5;
     obstacle.style.left = position + "px";
 
-    // Pega posições relativas dentro do container #game
-    const dogRect = getRelativeRect(dog);
-    const obstacleRect = getRelativeRect(obstacle);
+    // Posição do dog e do obstáculo em px dentro do game
+    const dogLeft = parseInt(window.getComputedStyle(dog).getPropertyValue("left"));
+    const dogBottom = parseInt(window.getComputedStyle(dog).getPropertyValue("bottom"));
+    const obstacleLeft = position;
+    const obstacleBottom = 10; // sempre 10px do chão
 
-    // Hitbox reduzida para o cacto (2px margem)
-    const obstacleHitbox = {
-      left: obstacleRect.left + 2,
-      right: obstacleRect.right - 2,
-      top: obstacleRect.top + 2,
-      bottom: obstacleRect.bottom - 2,
-    };
+    // Hitbox reduzida para obstáculo (2px de margem)
+    const obstacleHitboxLeft = obstacleLeft + 2;
+    const obstacleHitboxRight = obstacleLeft + obstacleWidth - 2;
+    const obstacleHitboxTop = obstacleBottom + obstacleHeight - 2;
+    const obstacleHitboxBottom = obstacleBottom + 2;
 
-    // Colisão verdadeira somente se retângulos se sobrepõem
+    // Hitbox do dog
+    const dogHitboxLeft = dogLeft;
+    const dogHitboxRight = dogLeft + dogWidth;
+    const dogHitboxTop = dogBottom + dogHeight;
+    const dogHitboxBottom = dogBottom;
+
+    // Colisão AABB (axis-aligned bounding box)
     const collided = !(
-      dogRect.right < obstacleHitbox.left ||
-      dogRect.left > obstacleHitbox.right ||
-      dogRect.bottom < obstacleHitbox.top ||
-      dogRect.top > obstacleHitbox.bottom
+      dogHitboxRight < obstacleHitboxLeft ||
+      dogHitboxLeft > obstacleHitboxRight ||
+      dogHitboxTop < obstacleHitboxBottom ||
+      dogHitboxBottom > obstacleHitboxTop
     );
 
     if (collided) {
