@@ -1,21 +1,31 @@
 const dog = document.getElementById("dog");
 const game = document.getElementById("game");
 const scoreDisplay = document.getElementById("score");
-const speedBtn = document.getElementById("speedBtn");
 
 let score = 0;
 let gameOver = false;
-let jumping = false;
-let speed = 8; // velocidade inicial
+
+// Tamanhos para colisão (ajustados para responsividade)
+function getSizes() {
+  const gameWidth = game.clientWidth;
+  const gameHeight = game.clientHeight;
+
+  // Ajusta tamanho do dog e obstáculo conforme o game
+  const dogWidth = gameWidth > 600 ? 44 : 36;
+  const dogHeight = gameWidth > 600 ? 44 : 36;
+  const obstacleWidth = gameWidth > 600 ? 32 : 36;
+  const obstacleHeight = gameWidth > 600 ? 44 : 36;
+
+  return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
+}
 
 function jump() {
-  if (jumping) return;
-  jumping = true;
-  dog.classList.add("jump");
-  setTimeout(() => {
-    dog.classList.remove("jump");
-    jumping = false;
-  }, 500);
+  if (!dog.classList.contains("jump")) {
+    dog.classList.add("jump");
+    setTimeout(() => {
+      dog.classList.remove("jump");
+    }, 500);
+  }
 }
 
 document.addEventListener("keydown", (e) => {
@@ -23,25 +33,9 @@ document.addEventListener("keydown", (e) => {
     jump();
   }
 });
-document.addEventListener("touchstart", (e) => {
-  e.preventDefault();
+document.addEventListener("touchstart", () => {
   jump();
-}, { passive: false });
-
-// Aumenta a velocidade ao clicar no botão
-speedBtn.addEventListener("click", () => {
-  speed += 2;
-  speedBtn.textContent = `Velocidade: ${speed}`;
 });
-
-function getSizes() {
-  const gameWidth = game.clientWidth;
-  const dogWidth = gameWidth > 600 ? 44 : 36;
-  const dogHeight = gameWidth > 600 ? 44 : 36;
-  const obstacleWidth = gameWidth > 600 ? 32 : 36;
-  const obstacleHeight = gameWidth > 600 ? 44 : 36;
-  return { dogWidth, dogHeight, obstacleWidth, obstacleHeight };
-}
 
 function createObstacle() {
   if (gameOver) return;
@@ -50,7 +44,7 @@ function createObstacle() {
   obstacle.classList.add("obstacle");
   obstacle.textContent = "🌵";
 
-  let position = game.clientWidth;
+  let position = game.clientWidth; // Começa fora da tela à direita
   obstacle.style.left = position + "px";
   game.appendChild(obstacle);
 
@@ -60,7 +54,7 @@ function createObstacle() {
       return;
     }
 
-    position -= speed;
+    position -= 5;
     obstacle.style.left = position + "px";
 
     const { dogWidth, dogHeight, obstacleWidth, obstacleHeight } = getSizes();
@@ -68,8 +62,9 @@ function createObstacle() {
     const dogLeft = parseInt(window.getComputedStyle(dog).getPropertyValue("left"));
     const dogBottom = parseInt(window.getComputedStyle(dog).getPropertyValue("bottom"));
     const obstacleLeft = position;
-    const obstacleBottom = 10;
+    const obstacleBottom = 10; // chão fixo
 
+    // Hitboxes exatas para colisão
     const dogHitbox = {
       left: dogLeft,
       right: dogLeft + dogWidth,
@@ -84,6 +79,7 @@ function createObstacle() {
       top: obstacleBottom + obstacleHeight,
     };
 
+    // Colisão AABB
     const collided = !(
       dogHitbox.right < obstacleHitbox.left ||
       dogHitbox.left > obstacleHitbox.right ||
