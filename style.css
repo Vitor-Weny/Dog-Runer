@@ -1,22 +1,31 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
-  text-align: center;
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-#game {
-  position: relative;
-  margin: 30px auto;
-  width: 100%;
-  max-width: 600px;
-  height: 200px;
-  background-color: #ffffff;
-  border: 2px solid #888;
-  overflow: hidden;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 20px;
+  -webkit-tap-highlight-color: transparent; /* Remove highlight no toque mobile */
+  user-select: none;
 }
 
+#game {
+  position: relative;
+  margin: 20px auto;
+  width: 600px;
+  height: 200px;
+  background-color: #fff;
+  border: 2px solid #888;
+  overflow: hidden;
+  touch-action: manipulation; /* para melhorar toque */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 /* Chão */
@@ -28,16 +37,18 @@ body {
   background-color: #888;
 }
 
-/* Dog */
+/* Cachorro */
 #dog {
-  width: 44px;
-  height: 44px;
   position: absolute;
   bottom: 10px;
   left: 50px;
+  width: 44px;
+  height: 44px;
   font-size: 32px;
   line-height: 44px;
   text-align: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 /* Obstáculo - cacto */
@@ -45,9 +56,14 @@ body {
   position: absolute;
   bottom: 10px;
   font-size: 32px;
+  width: 32px;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  user-select: none;
 }
 
-/* Pulo */
+/* Animação do pulo */
 .jump {
   animation: jump 0.5s ease-out;
 }
@@ -56,4 +72,26 @@ body {
   0% { bottom: 10px; }
   50% { bottom: 90px; }
   100% { bottom: 10px; }
+}
+
+/* Responsividade */
+@media (max-width: 650px) {
+  #game {
+    width: 100%;
+    max-width: 600px;
+    height: 150px;
+  }
+
+  #dog, .obstacle {
+    width: 36px;
+    height: 36px;
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  @keyframes jump {
+    0% { bottom: 8px; }
+    50% { bottom: 70px; }
+    100% { bottom: 8px; }
+  }
 }
