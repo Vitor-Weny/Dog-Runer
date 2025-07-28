@@ -18,17 +18,14 @@ function jump() {
   }, 500);
 }
 
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-    jump();
-  }
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") jump();
 });
-document.addEventListener("touchstart", (e) => {
+document.addEventListener("touchstart", e => {
   e.preventDefault();
   jump();
 }, { passive: false });
 
-// Aumenta a velocidade ao clicar no botão
 speedBtn.addEventListener("click", () => {
   speed += 2;
   speedBtn.textContent = `Velocidade: ${speed}`;
