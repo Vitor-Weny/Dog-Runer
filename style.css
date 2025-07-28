@@ -1,10 +1,95 @@
-/* Mesmo CSS anterior com este adicional para o botão */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  /* ... seus estilos anteriores ... */
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 20px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+#game {
+  position: relative;
+  margin: 20px auto;
+  width: 600px;
+  height: 200px;
+  background-color: #fff;
+  border: 2px solid #888;
+  overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+#ground {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 10px;
+  background-color: #888;
+}
+
+#dog {
+  position: absolute;
+  bottom: 10px;
+  left: 50px;
+  width: 44px;
+  height: 44px;
+  font-size: 32px;
+  line-height: 44px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: bottom 0.25s ease-out;
+}
+
+.obstacle {
+  position: absolute;
+  bottom: 10px;
+  font-size: 32px;
+  width: 32px;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  user-select: none;
+}
+
+.jump {
+  animation: jump 0.5s ease-out forwards;
+}
+
+@keyframes jump {
+  0% { bottom: 10px; }
+  50% { bottom: 130px; }
+  100% { bottom: 10px; }
+}
+
+@media (max-width: 650px) {
+  #game {
+    width: 100%;
+    max-width: 600px;
+    height: 150px;
+  }
+
+  #dog, .obstacle {
+    width: 36px;
+    height: 36px;
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  @keyframes jump {
+    0% { bottom: 8px; }
+    50% { bottom: 100px; }
+    100% { bottom: 8px; }
+  }
 }
 
 #speedBtn {
