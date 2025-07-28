@@ -1,3 +1,4 @@
+
 const dog = document.getElementById("dog");
 const game = document.getElementById("game");
 const scoreDisplay = document.getElementById("score");
@@ -5,7 +6,7 @@ const scoreDisplay = document.getElementById("score");
 let score = 0;
 let gameOver = false;
 
-// Pulando com espaço
+// Pulo com espaço
 document.addEventListener("keydown", function (event) {
   if (event.code === "Space" && !dog.classList.contains("jump")) {
     dog.classList.add("jump");
@@ -15,59 +16,48 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
-// Criar obstáculos 🐕 dinamicamente
+// Criar obstáculo
 function createObstacle() {
   if (gameOver) return;
 
   const obstacle = document.createElement("div");
   obstacle.classList.add("obstacle");
   obstacle.textContent = "🐕";
-  obstacle.style.right = "-30px";
 
-  // posição inicial e velocidade
-  let obstaclePosition = 600;
-  obstacle.style.left = obstaclePosition + "px";
+  let position = 600;
+  obstacle.style.left = position + "px";
   game.appendChild(obstacle);
 
-  // Movimento do obstáculo
   const moveInterval = setInterval(() => {
     if (gameOver) {
       clearInterval(moveInterval);
       return;
     }
 
-    obstaclePosition -= 5;
-    obstacle.style.left = obstaclePosition + "px";
+    position -= 5;
+    obstacle.style.left = position + "px";
 
+    // Colisão
     const dogTop = parseInt(window.getComputedStyle(dog).getPropertyValue("bottom"));
-    const dogLeft = 50;
-    const dogRight = 94; // 50 + 44
-
-    const obstacleLeft = obstaclePosition;
-    const obstacleRight = obstaclePosition + 30;
-
-    if (
-      obstacleLeft < dogRight &&
-      obstacleRight > dogLeft &&
-      dogTop < 44
-    ) {
+    if (position > 50 && position < 94 && dogTop < 44) {
       clearInterval(moveInterval);
       gameOver = true;
       alert("💥 Você perdeu! Pontuação: " + score);
       location.reload();
     }
 
-    if (obstaclePosition < -30) {
+    // Saiu da tela
+    if (position < -50) {
       clearInterval(moveInterval);
       obstacle.remove();
     }
   }, 20);
 
-  // Próximo obstáculo aleatório
-  setTimeout(createObstacle, Math.random() * 2000 + 1000);
+  // Próximo obstáculo entre 1s e 2s
+  setTimeout(createObstacle, Math.random() * 1000 + 1000);
 }
 
-// Pontuação contínua
+// Pontuação
 setInterval(() => {
   if (!gameOver) {
     score++;
@@ -75,5 +65,5 @@ setInterval(() => {
   }
 }, 100);
 
-// Começar o jogo
+// Iniciar
 createObstacle();
