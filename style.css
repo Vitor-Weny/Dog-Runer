@@ -63,31 +63,22 @@ body {
   user-select: none;
 }
 
-/* Animação do pulo */
-.jump {
-  animation: jump 0.5s ease-out;
-}
-
 @keyframes jump {
   0% { bottom: 10px; }
-  50% { bottom: 90px; }
+  50% { bottom: 130px; }  /* pulo mais alto */
   100% { bottom: 10px; }
 }
 
-/* Responsividade */
-@media (max-width: 650px) {
-  #game {
-    width: 100%;
-    max-width: 600px;
-    height: 150px;
-  }
+/* No media query (mobile), ajusta também: */
 
-  #dog, .obstacle {
-    width: 36px;
-    height: 36px;
-    font-size: 28px;
-    line-height: 36px;
+@media (max-width: 650px) {
+  @keyframes jump {
+    0% { bottom: 8px; }
+    50% { bottom: 100px; }  /* pulo mais alto no mobile */
+    100% { bottom: 8px; }
   }
+}
+
 
   @keyframes jump {
     0% { bottom: 8px; }
